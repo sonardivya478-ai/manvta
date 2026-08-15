@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="mr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>MANVTA GROUP — Service Marketplace</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f6fb;color:#172033}
+.app{max-width:520px;margin:auto;min-height:100vh;background:#fff;padding-bottom:78px}
+header{background:linear-gradient(135deg,#102d73,#2563eb);color:#fff;padding:20px 16px;border-radius:0 0 24px 24px}
+.brand{font-size:24px;font-weight:800}.tag{font-size:12px;opacity:.9;margin-top:4px}
+.top{display:flex;gap:8px;margin-top:15px}.role{flex:1;background:#ffffff1c;border:1px solid #ffffff40;color:#fff;padding:10px;border-radius:11px;font-weight:700}
+.search{margin-top:12px;background:#fff;color:#64748b;border-radius:12px;padding:12px}
+h2{font-size:19px;margin:20px 16px 12px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;padding:0 16px}
+.card,.panel{border:1px solid #e5eaf2;border-radius:15px;padding:14px;background:#fff;box-shadow:0 4px 15px #00000008}
+.card{cursor:pointer}.icon{font-size:25px}.name{font-weight:700;margin-top:7px;font-size:14px}
+.cta{margin:18px 16px;background:#111827;color:#fff;padding:15px;border-radius:15px;text-align:center;font-weight:800;cursor:pointer}
+.section{padding:0 16px}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+button{border:0;border-radius:10px;padding:10px 12px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}
+button.secondary{background:#eaf0ff;color:#1d4ed8}button.success{background:#059669}
+button.danger{background:#dc2626}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d9e0ea;border-radius:10px;margin:5px 0 10px;font-size:15px}
+label{font-size:12px;font-weight:800}.form{padding:16px}.hide{display:none}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);background:#fff;border-top:1px solid #e5eaf2;display:flex;overflow:auto;z-index:5}
+nav button{background:#fff;color:#475569;border-radius:0;padding:8px 7px;min-width:82px;font-size:11px}.active{color:#2563eb!important}
+.back{margin:14px 16px;background:#eef2ff;color:#1d4ed8}.successbox{background:#ecfdf5;color:#047857;padding:13px;border-radius:11px;margin:8px 0}
+.warn{background:#fff7ed;color:#9a3412;padding:13px;border-radius:11px}.badge{background:#ef4444;color:#fff;border-radius:999px;padding:3px 7px;font-size:10px}
+.price{font-size:20px;font-weight:800}.muted{color:#64748b;font-size:12px}.pill{display:inline-block;background:#eef2ff;color:#1d4ed8;padding:5px 8px;border-radius:999px;font-size:11px;margin:2px}
+.statgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{padding:14px;border:1px solid #e5eaf2;border-radius:13px;background:#fff}.stat b{font-size:20px}
+table{width:100%;border-collapse:collapse;font-size:12px}td,th{padding:9px 5px;border-bottom:1px solid #e5eaf2;text-align:left}
+.toast{position:fixed;left:50%;bottom:82px;transform:translateX(-50%);background:#111827;color:#fff;padding:11px 14px;border-radius:10px;display:none;z-index:10}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">MANVTA GROUP</div>
+  <div class="tag">Zomato-style Service Marketplace • Customer ↔ Agent ↔ MANVTA</div>
+  <div class="top">
+    <button class="role" onclick="show('home')">Customer</button>
+    <button class="role" onclick="openAgentDashboard()">Agent</button>
+    <button class="role" onclick="show('admin')">Admin</button>
+  </div>
+  <div class="search">🔍 Search manpower, security, housekeeping, maintenance...</div>
+</header>
+
+<section id="home">
+<h2>Services</h2>
+<div class="grid">
+  <div class="card" onclick="openReq('Manpower Supply')"><div class="icon">👷</div><div class="name">Manpower Supply</div></div>
+  <div class="card" onclick="openReq('Security Guard')"><div class="icon">🛡️</div><div class="name">Security Guard</div></div>
+  <div class="card" onclick="openReq('Housekeeping')"><div class="icon">🧹</div><div class="name">Housekeeping</div></div>
+  <div class="card" onclick="openReq('Building Watchman')"><div class="icon">👨‍✈️</div><div class="name">Watchman</div></div>
+  <div class="card" onclick="openReq('Pest Control')"><div class="icon">🐜</div><div class="name">Pest Control</div></div>
+  <div class="card" onclick="openReq('Maintenance')"><div class="icon">🔧</div><div class="name">Maintenance</div></div>
+  <div class="card" onclick="openReq('Electrical / Electrician')"><div class="icon">⚡</div><div class="name">Electrical</div></div>
+  <div class="card" onclick="openReq('Bouncers')"><div class="icon">💪</div><div class="name">Bouncers</div></div>
+</div>
+<div class="cta" onclick="openReq('Manpower Supply')">📝 POST REQUIREMENT & FIND AGENTS</div>
+<div class="section">
+<div class="row">
+<button onclick="show('login')">🔐 CUSTOMER / AGENT LOGIN</button>
+<button class="secondary" onclick="show('agentReg')">➕ JOIN AS AGENT</button>
+</div>
+</div>
+<div class="section" style="padding:0 16px">
+  <div class="row" style="margin-top:10px">
+    <button onclick="show('agentReg')">👷 AGENT REGISTRATION</button>
+    <button class="secondary" onclick="show('notifications');renderNotifications()">🔔 NOTIFICATIONS</button>
+  </div>
+</div>
+<h2>💳 Payments</h2>
+<div class="section"><div class="panel"><b>Online + Cash on Service</b><br><span class="muted">UPI • Card • Net Banking • Cash • Booking OTP • Receipt • Commission Ledger</span><br><button style="margin-top:8px" onclick="demoPayment()">OPEN PAYMENT DEMO</button></div></div>
+<h2>How it works</h2>
+<div class="section">
+<div class="panel">1️⃣ Customer requirement → 2️⃣ MANVTA matching → 3️⃣ Agents send quote → 4️⃣ Customer confirms → 5️⃣ Payment → 6️⃣ Service completed</div>
+</div>
+<h2>Commission model</h2>
+<div class="section"><div class="panel"><b>Example:</b> Customer booking ₹10,000 → MANVTA platform commission 10% = ₹1,000 → Agent payout ₹9,000.</div></div>
+</section>
+
+
+<section id="login" class="hide">
+<button class="back" onclick="show('home')">← Back</button>
+<div class="form">
+<h2 style="margin:0 0 6px">🔐 MANVTA Login</h2>
+<p class="muted">Customer आणि Agent साठी स्वतंत्र secure login.</p>
+<div class="grid" style="padding:0;margin:12px 0">
+<div class="card" onclick="show('customerLogin')"><div class="icon">👤</div><div class="name">Customer Login</div><div class="muted">OTP based</div></div>
+<div class="card" onclick="show('agentLogin')"><div class="icon">👷</div><div class="name">Agent Login</div><div class="muted">OTP + PIN + KYC</div></div>
+</div>
+<div class="panel"><b>MANVTA Admin</b><br><span class="muted">Admin access should use strong credentials + 2FA in production.</span><br><button class="secondary" style="margin-top:8px" onclick="show('admin')">ADMIN PANEL</button></div>
+</div></section>
+
+<section id="customerLogin" class="hide">
+<button class="back" onclick="show('login')">← Back</button>
+<div class="form">
+<h2 style="margin:0 0 6px">👤 Customer Login</h2>
+<p class="muted">Customer account साठी mobile OTP.</p>
+<label>Mobile Number</label><input id="cMobile" type="tel" maxlength="10" placeholder="10 digit mobile">
+<button style="width:100%;padding:13px" onclick="sendCustomerOTP()">SEND OTP</button>
+<div id="customerOtpBox" class="hide"><label>OTP</label><input id="cOtp" maxlength="6" placeholder="Enter OTP"><button class="success" style="width:100%;padding:13px" onclick="verifyCustomerOTP()">VERIFY & LOGIN</button></div>
+<div id="customerLoginMsg"></div>
+</div></section>
+
+<section id="agentLogin" class="hide">
+<button class="back" onclick="show('login')">← Back</button>
+<div class="form">
+<h2 style="margin:0 0 6px">🛡️ Secure Agent Login</h2>
+<div class="warn"><b>Agent Security:</b> only MANVTA-approved agents can enter the Agent Dashboard.</div>
+<label>Registered Mobile Number</label><input id="agMobile" type="tel" maxlength="10" placeholder="10 digit mobile">
+<label>Agent PIN</label><input id="agPin" type="password" maxlength="6" placeholder="4–6 digit PIN">
+<button style="width:100%;padding:13px" onclick="sendAgentOTP()">SEND SECURE OTP</button>
+<div id="agentOtpBox" class="hide"><label>OTP</label><input id="agOtp" maxlength="6" placeholder="Enter OTP"><button class="success" style="width:100%;padding:13px" onclick="verifyAgentLogin()">VERIFY OTP & LOGIN</button></div>
+<div id="agentLoginMsg"></div>
+<p class="muted">New Agent? <button class="secondary" onclick="show('agentReg')">Register Here</button></p>
+</div></section>
+
+<section id="agentReg" class="hide">
+<button class="back" onclick="show('login')">← Back</button>
+<div class="form">
+<h2 style="margin:0 0 14px">👷 New Agent Registration</h2>
+<div class="successbox">Registration → KYC → MANVTA Verification → Agent ID → Agent Dashboard</div>
+<label>Agent / Company Name</label><input id="aName" placeholder="Full name / company name">
+<label>Mobile Number</label><input id="aMobile" type="tel" maxlength="10" placeholder="10 digit mobile">
+<label>Email</label><input id="aEmail" type="email" placeholder="email@example.com">
+<label>Business Type</label><select id="aType"><option>Individual Agent</option><option>Service Provider Company</option><option>Manpower Agency</option><option>Contractor</option></select>
+<label>Services</label><input id="aServices" placeholder="Security, housekeeping, manpower...">
+<label>Service Areas</label><input id="aArea" placeholder="Pune, Nashik, Malegaon...">
+<label>PAN</label><input id="aPan" placeholder="PAN">
+<label>GSTIN (optional)</label><input id="aGst" placeholder="GSTIN">
+<label>Aadhaar / KYC Document</label><input id="aKyc" type="file" accept=".jpg,.jpeg,.png,.pdf">
+<label>License / Company Registration</label><input id="aLicense" type="file" accept=".jpg,.jpeg,.png,.pdf">
+<label>Bank / UPI</label><input id="aBank" placeholder="Account / UPI ID">
+<label>Set Login PIN</label><input id="aPin" type="password" maxlength="6" placeholder="4-6 digit PIN">
+<div class="panel"><label><input id="aAgree" type="checkbox" style="width:auto"> MANVTA terms आणि commission policy स्वीकारतो.</label></div>
+<button style="width:100%;padding:13px" onclick="registerAgent()">SUBMIT AGENT REGISTRATION</button>
+<div id="agentRegMsg"></div>
+</div>
+</section>
+
+<section id="request" class="hide">
+<button class="back" onclick="show('home')">← Back</button>
+<div class="form">
+<h2 style="margin:0 0 14px">Post Customer Requirement</h2>
+<label>Service</label><select id="service"></select>
+<label>Staff / Quantity</label><input id="qty" type="number" min="1" value="1">
+<label>Location</label><input id="loc" placeholder="Pune / Nashik / Malegaon / Mumbai...">
+<label>Date</label><input id="date" type="date">
+<label>Working Hours</label><input id="hours" placeholder="8 / 12 hours">
+<label>Budget (₹)</label><input id="budget" type="number" placeholder="e.g. 10000">
+<label>Customer Mobile</label><input id="mobile" type="tel" placeholder="10 digit mobile">
+<label>Details</label><textarea id="details" rows="4" placeholder="Requirement details..."></textarea>
+<button style="width:100%;padding:13px" onclick="postRequirement()">FIND AGENTS</button>
+<div id="requestMsg"></div>
+</div>
+</section>
+
+<section id="matches" class="hide">
+<button class="back" onclick="show('request')">← Back</button>
+<h2>Nearby Verified Agents</h2>
+<div class="section" id="matchList"></div>
+</section>
+
+<section id="myBookings" class="hide">
+<h2>My Bookings <span class="badge" id="bookCount">0</span></h2>
+<div class="section" id="bookingList"></div>
+</section>
+
+
+<section id="agentReg" class="hide">
+<button class="back" onclick="show('home')">← Back</button>
+<div class="form">
+<h2 style="margin:0 0 14px">👷 Agent Registration</h2>
+<div class="successbox">MANVTA verification: KYC → Document review → Service-area verification → Approval → Agent ID</div>
+<label>Agent / Company Name</label><input id="aName" placeholder="Full name / company name">
+<label>Mobile Number</label><input id="aMobile" type="tel" placeholder="10 digit mobile">
+<label>Email</label><input id="aEmail" type="email" placeholder="email@example.com">
+<label>Business Type</label><select id="aType"><option>Individual Agent</option><option>Service Provider Company</option><option>Manpower Agency</option><option>Contractor</option></select>
+<label>Services</label><input id="aServices" placeholder="Security, housekeeping, manpower...">
+<label>Service Areas</label><input id="aArea" placeholder="Pune, Nashik, Malegaon...">
+<label>PAN Number</label><input id="aPan" placeholder="PAN">
+<label>GSTIN (optional)</label><input id="aGst" placeholder="GSTIN">
+<label>Aadhaar / KYC document</label><input id="aKyc" type="file" accept=".jpg,.jpeg,.png,.pdf">
+<label>Company Registration / License</label><input id="aLicense" type="file" accept=".jpg,.jpeg,.png,.pdf">
+<label>Bank Account / UPI</label><input id="aBank" placeholder="Account / UPI ID">
+<label>Terms</label><div class="panel"><label><input id="aAgree" type="checkbox" style="width:auto"> I agree to MANVTA verification, commission and service terms.</label></div>
+<button style="width:100%;padding:13px" onclick="registerAgent()">SUBMIT FOR MANVTA VERIFICATION</button>
+<div id="agentRegMsg"></div>
+</div>
+</section>
+
+
+<section id="payment" class="hide">
+<button class="back" onclick="show('home')">← Back</button>
+<div class="form">
+<h2 style="margin:0 0 8px">💳 MANVTA Payment</h2>
+<div id="payBooking" class="panel"></div>
+<h2 style="margin-left:0">Select Payment Method</h2>
+<div class="grid" style="padding:0">
+<div class="card" onclick="selectPayment('Online')"><div class="icon">📲</div><div class="name">Online Payment</div><div class="muted">UPI • Card • Net Banking</div></div>
+<div class="card" onclick="selectPayment('Cash')"><div class="icon">💵</div><div class="name">Cash on Service</div><div class="muted">Pay Agent after service</div></div>
+</div>
+<div id="paymentAction" style="margin-top:12px"></div>
+<div class="warn" style="margin-top:12px"><b>Cash Security:</b> Customer आणि Agent दोघांनी Booking OTP वापरून cash collection confirm करायचे. MANVTA commission ledger मध्ये automatic record होईल.</div>
+</div>
+</section>
+
+<section id="notifications" class="hide">
+<h2>🔔 Notification Center</h2>
+<div class="section">
+<div class="panel">
+<b>Booking Notification Channels</b>
+<p class="muted">Booking तयार झाल्यावर Customer, Agent आणि MANVTA Admin यांना event-based notification.</p>
+<span class="pill">WhatsApp</span><span class="pill">SMS</span><span class="pill">Call</span><span class="pill">In-App</span>
+</div>
+<div id="notificationList" style="margin-top:10px"></div>
+<h2 style="margin-left:0">MANVTA Contact / Escalation</h2>
+<div class="panel">
+<p>📞 Primary: <a href="tel:9923692426">9923692426</a></p>
+<p>📞 Secondary: <a href="tel:9336099933">9336099933</a></p>
+<button onclick="callManvta('9923692426')">CALL MANVTA</button>
+<button class="secondary" onclick="smsManvta()">SMS</button>
+</div>
+</div>
+</section>
+
+<section id="agentDash" class="hide">
+<h2>👷 Agent Dashboard</h2><div class="section"><button class="danger" onclick="logout()">🔒 LOGOUT AGENT</button></div>
+<div class="section"><div class="successbox">Agent login active • Verified Agent profile / KYC status is controlled by MANVTA Admin.</div></div>
+<div class="section">
+<div class="statgrid">
+<div class="stat"><div class="muted">Available Leads</div><b id="leadCount">3</b></div>
+<div class="stat"><div class="muted">This Month</div><b>₹42,500</b></div>
+</div>
+<h2 style="margin-left:0">New Customer Leads</h2>
+<div class="panel">
+<b>Security Guard • Pune</b><br><span class="muted">5 staff • 12 hrs • Budget ₹25,000</span><br>
+<button onclick="quote('Security Guard','Pune',25000)">Send Quote</button>
+<button class="secondary" onclick="toast('Lead saved')">Save</button>
+</div>
+<div class="panel" style="margin-top:10px">
+<b>Housekeeping • Nashik</b><br><span class="muted">3 staff • 8 hrs • Budget ₹18,000</span><br>
+<button onclick="quote('Housekeeping','Nashik',18000)">Send Quote</button>
+</div>
+<h2 style="margin-left:0">Agent Profile</h2>
+<div class="panel"><b>Verified Agent</b><br><span class="pill">KYC Verified</span><span class="pill">4.8 ★</span><span class="pill">Active</span><p class="muted">Service area: Pune • Nashik • Malegaon</p></div>
+</div>
+</section>
+
+<section id="quoteBox" class="hide">
+<button class="back" onclick="openAgentDashboard()">← Back</button>
+<div class="form">
+<h2 style="margin:0 0 14px">Send Quote</h2>
+<div class="panel" id="quoteSummary"></div>
+<label>Your Quote (₹)</label><input id="quoteAmount" type="number">
+<label>Message</label><textarea id="quoteText" rows="3" placeholder="Availability, staff details, terms..."></textarea>
+<button style="width:100%;padding:13px" onclick="sendQuote()">SEND QUOTE TO CUSTOMER</button>
+</div>
+</section>
+
+<section id="admin" class="hide">
+<h2>⚙️ MANVTA Admin Panel</h2>
+<div class="section">
+<div class="statgrid">
+<div class="stat"><div class="muted">Customers</div><b id="customerStat">128</b></div>
+<div class="stat"><div class="muted">Agents</div><b>46</b></div>
+<div class="stat"><div class="muted">Bookings</div><b id="bookingStat">74</b></div>
+<div class="stat"><div class="muted">Commission</div><b>₹1.28L</b></div>
+</div>
+<h2 style="margin-left:0">Production Modules</h2>
+<div class="panel">
+<span class="pill">OTP Authentication</span><span class="pill">KYC</span><span class="pill">Booking</span><span class="pill">Online Payment</span><span class="pill">Cash Collection</span><span class="pill">Commission</span><span class="pill">Push</span><span class="pill">WhatsApp/SMS</span><span class="pill">Reports</span>
+<p class="muted">Prototype UI is ready. Live deployment needs secure backend, database, OTP/payment providers, cloud storage and server-side authorization.</p>
+</div>
+<h2 style="margin-left:0">Commission Engine</h2>
+<div class="panel">
+<label>Commission %</label><input id="commission" type="number" value="10" min="0" max="100">
+<div class="muted">Example booking amount</div><input id="calcAmount" type="number" value="10000">
+<button onclick="calcCommission()">CALCULATE</button>
+<div id="calcResult" class="successbox" style="margin-top:10px"></div>
+</div>
+<h2 style="margin-left:0">Recent Bookings</h2>
+<div class="panel"><table><tr><th>Service</th><th>Amount</th><th>MANVTA</th><th>Status</th></tr>
+<tr><td>Security</td><td>₹25,000</td><td>₹2,500</td><td>Confirmed</td></tr>
+<tr><td>Housekeeping</td><td>₹18,000</td><td>₹1,800</td><td>Pending</td></tr>
+<tr><td>Manpower</td><td>₹35,000</td><td>₹3,500</td><td>Completed</td></tr></table></div>
+<h2 style="margin-left:0">Notification Policy</h2>
+<div class="panel">
+  <span class="pill">Customer: In-App + WhatsApp + SMS</span>
+  <span class="pill">Agent: In-App + WhatsApp + SMS</span>
+  <span class="pill">MANVTA: In-App + WhatsApp + SMS</span>
+  <p class="muted">Call escalation can be triggered for urgent/unanswered bookings. Production WhatsApp/SMS requires an approved provider/API.</p>
+</div>
+<h2 style="margin-left:0">Agent Verification</h2>
+<div class="panel"><b>ABC Facility Services</b><br><span class="muted">KYC • GST • Service Area</span><br><button class="success" onclick="toast('Agent verified')">VERIFY</button> <button class="danger" onclick="toast('Agent rejected')">REJECT</button></div>
+</div>
+</section>
+
+<nav>
+<button onclick="show('home')">🏠<br>Home</button>
+<button onclick="show('request')">📝<br>Request</button>
+<button onclick="show('myBookings');renderBookings()">📦<br>Bookings</button>
+<button onclick="openAgentDashboard()">👷<br>Agent</button>
+<button onclick="show('notifications');renderNotifications()">🔔<br>Alerts</button><button onclick="show('admin')">⚙️<br>Admin</button><button onclick="show('login')">🔐<br>Login</button>
+</nav>
+<div id="toast" class="toast"></div>
+</div>
+
+<script>
+const services=['Manpower Supply','Security Guard','Housekeeping','Building Watchman','Pest Control','Maintenance','Electrical / Electrician','Casual Labour','Bouncers','Food Centers Manpower'];
+function show(id){document.querySelectorAll('section').forEach(s=>s.classList.add('hide'));document.getElementById(id).classList.remove('hide');scrollTo(0,0)}
+
+function generateDemoOTP(){ return '123456'; }
+function sendCustomerOTP(){
+ const mobile=document.getElementById('cMobile').value.trim();
+ if(!/^\d{10}$/.test(mobile)){alert('Valid 10 digit mobile number भरा.');return}
+ sessionStorage.setItem('customerOtp',generateDemoOTP()); sessionStorage.setItem('customerMobile',mobile);
+ document.getElementById('customerOtpBox').classList.remove('hide');
+ document.getElementById('customerLoginMsg').innerHTML='<div class="successbox">OTP sent. Prototype OTP: <b>123456</b></div>';
+}
+function verifyCustomerOTP(){
+ if(document.getElementById('cOtp').value.trim()!==sessionStorage.getItem('customerOtp')){alert('Invalid OTP');return}
+ localStorage.setItem('manvtaSession',JSON.stringify({role:'customer',mobile:sessionStorage.getItem('customerMobile')}));
+ document.getElementById('customerLoginMsg').innerHTML='<div class="successbox">Customer login successful.</div>';
+ setTimeout(()=>show('home'),400);
+}
+function sendAgentOTP(){
+ const mobile=document.getElementById('agMobile').value.trim(), pin=document.getElementById('agPin').value.trim();
+ const agents=JSON.parse(localStorage.getItem('manvtaAgents')||'[]'), a=agents.find(x=>x.mobile===mobile && x.pin===pin);
+ if(!a){document.getElementById('agentLoginMsg').innerHTML='<div class="warn">Agent account not found. Check mobile/PIN.</div>';return}
+ if(a.status!=='Verified'){document.getElementById('agentLoginMsg').innerHTML='<div class="warn">Agent login blocked. MANVTA KYC status: <b>'+a.status+'</b></div>';return}
+ sessionStorage.setItem('agentOtp',generateDemoOTP()); sessionStorage.setItem('agentMobile',mobile); sessionStorage.setItem('agentId',a.id);
+ document.getElementById('agentOtpBox').classList.remove('hide');
+ document.getElementById('agentLoginMsg').innerHTML='<div class="successbox">Secure OTP sent. Prototype OTP: <b>123456</b></div>';
+}
+function verifyAgentLogin(){
+ if(document.getElementById('agOtp').value.trim()!==sessionStorage.getItem('agentOtp')){alert('Invalid OTP');return}
+ const mobile=sessionStorage.getItem('agentMobile'), agents=JSON.parse(localStorage.getItem('manvtaAgents')||'[]');
+ const a=agents.find(x=>x.mobile===mobile && x.status==='Verified');
+ if(!a){alert('Agent verification failed.');return}
+ localStorage.setItem('manvtaSession',JSON.stringify({role:'agent',mobile,agentId:a.id,loginAt:Date.now()}));
+ document.getElementById('agentLoginMsg').innerHTML='<div class="successbox">Secure Agent login successful.</div>';
+ setTimeout(()=>show('agentDash'),400);
+}
+function registerAgent(){
+ const name=document.getElementById('aName').value.trim();
+ const mobile=document.getElementById('aMobile').value.trim();
+ const area=document.getElementById('aArea').value.trim();
+ const pan=document.getElementById('aPan').value.trim();
+ const pin=document.getElementById('aPin').value.trim();
+ if(!name || mobile.length!==10 || !/^\d+$/.test(mobile) || !area || !pan || !/^\d{4,6}$/.test(pin) || !document.getElementById('aAgree').checked){
+   alert('Name, 10 digit mobile, area, PAN, 4-6 digit PIN आणि terms आवश्यक आहेत.'); return;
+ }
+ const agents=JSON.parse(localStorage.getItem('manvtaAgents')||'[]');
+ if(agents.some(x=>x.mobile===mobile)){alert('हा mobile आधीच registered आहे.');return}
+ const id='AG'+Date.now().toString().slice(-6);
+ agents.unshift({
+   id,name,mobile,pin,area,pan,
+   email:document.getElementById('aEmail').value.trim(),
+   type:document.getElementById('aType').value,
+   services:document.getElementById('aServices').value.trim(),
+   gst:document.getElementById('aGst').value.trim(),
+   bank:document.getElementById('aBank').value.trim(),
+   status:'Pending KYC Review',
+   created:new Date().toLocaleString('en-IN')
+ });
+ localStorage.setItem('manvtaAgents',JSON.stringify(agents));
+ localStorage.setItem('lastAgentId',id);
+ document.getElementById('agentRegMsg').innerHTML=`<div class="successbox">Registration submitted successfully.<br><b>Agent ID: ${id}</b><br>Status: Pending MANVTA KYC Review.<br>Approval नंतर Agent login activate होईल.</div>`;
+ addNotification('MANVTA','New Agent Registration',`${name} (${id}) submitted registration.`);
+ addNotification(name,'Registration Received',`Agent ID ${id}. Status: Pending MANVTA KYC Review.`);
+}
+
+function openAgentDashboard(){
+ const s=JSON.parse(localStorage.getItem('manvtaSession')||'null');
+ if(!s || s.role!=='agent'){show('agentLogin');return}
+ const agents=JSON.parse(localStorage.getItem('manvtaAgents')||'[]');
+ const a=agents.find(x=>x.id===s.agentId && x.status==='Verified');
+ if(!a){alert('Agent access denied. MANVTA verification required.');show('agentLogin');return}
+ show('agentDash');
+}
+function openReq(s){show('request');const sel=document.getElementById('service');sel.innerHTML=services.map(x=>`<option>${x}</option>`).join('');sel.value=s}
+function logout(){localStorage.removeItem('manvtaSession');sessionStorage.clear();toast('Logged out securely');setTimeout(()=>show('home'),300);}
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',1800)}
+function postRequirement(){
+ const m=document.getElementById('mobile').value.trim(), l=document.getElementById('loc').value.trim();
+ if(m.length<10||!l){alert('Mobile आणि Location भरा.');return}
+ const data={service:document.getElementById('service').value,qty:document.getElementById('qty').value,loc:l,date:document.getElementById('date').value||'-',hours:document.getElementById('hours').value||'-',budget:Number(document.getElementById('budget').value||0),mobile:m,details:document.getElementById('details').value||'-',status:'Searching Agents'};
+ localStorage.setItem('lastRequirement',JSON.stringify(data));
+ document.getElementById('matchList').innerHTML=[
+  ['Verified Facility Partner','4.9 ★','12 km','₹'+Math.round((data.budget||20000)*.95)],
+  ['MANVTA Service Agent','4.8 ★','18 km','₹'+Math.round((data.budget||20000)*.90)],
+  ['Local Service Partner','4.7 ★','24 km','₹'+Math.round((data.budget||20000)*.92)]
+ ].map((a,i)=>`<div class="panel" style="margin-bottom:10px"><div class="row"><b>${a[0]}</b><span class="pill">${a[1]}</span></div><div class="muted">📍 ${a[2]} • KYC Verified • ${data.service}</div><p class="price">${a[3]}</p><button onclick="confirmBooking('${a[0]}',${parseInt(a[3].replace(/\\D/g,''))})">SELECT AGENT</button></div>`).join('');
+ show('matches');
+}
+function confirmBooking(agent,amount){
+ const req=JSON.parse(localStorage.getItem('lastRequirement')||'{}');
+ const c=Number((amount||0)*0.10), payout=amount-c;
+ const b={id:'MG'+Date.now().toString().slice(-6),service:req.service||'Service',agent,amount,commission:c,payout,status:'Confirmed',paymentMethod:'Not Selected',paymentStatus:'Pending',cashOtp:'',cashCollected:false};
+ addNotification('MANVTA','New Booking',`${b.id} • ${b.service} • ₹${amount.toLocaleString('en-IN')} • Agent: ${agent}`);
+ addNotification(agent,'New Booking Lead',`${b.id} • ${b.service} • ₹${amount.toLocaleString('en-IN')} • Confirmed`);
+ const arr=JSON.parse(localStorage.getItem('manvtaBookings')||'[]');arr.unshift(b);localStorage.setItem('manvtaBookings',JSON.stringify(arr));
+ document.getElementById('bookingStat').textContent=74+arr.length;show('myBookings');renderBookings();toast('Booking confirmed');
+}
+
+function demoPayment(){
+ const arr=JSON.parse(localStorage.getItem('manvtaBookings')||'[]');
+ if(arr.length){openPayment(arr[0].id);return}
+ const b={id:'DEMO001',service:'Manpower Supply',agent:'MANVTA Verified Agent',amount:10000,commission:1000,payout:9000,status:'Confirmed',paymentMethod:'Not Selected',paymentStatus:'Pending',cashOtp:'',cashCollected:false};
+ localStorage.setItem('manvtaBookings',JSON.stringify([b])); openPayment(b.id);
+}
+function openPayment(id){
+ const arr=JSON.parse(localStorage.getItem('manvtaBookings')||'[]'), b=arr.find(x=>x.id===id);
+ if(!b){toast('Booking not found');return}
+ document.getElementById('payBooking').innerHTML=`<b>${b.service}</b><br><span class="muted">Booking #${b.id} • Agent: ${b.agent}</span><p class="price">₹${Number(b.amount).toLocaleString('en-IN')}</p><span class="pill">MANVTA Commission ₹${Number(b.commission).toLocaleString('en-IN')}</span> <span class="pill">Agent ₹${Number(b.payout).toLocaleString('en-IN')}</span>`;
+ document.getElementById('paymentAction').innerHTML='';
+ window.currentPayId=id; show('payment');
+}
+function selectPayment(method){
+ const arr=JSON.parse(localStorage.getItem('manvtaBookings')||'[]'), b=arr.find(x=>x.id===window.currentPayId);
+ if(!b)return;
+ b.paymentMethod=method;
+ if(method==='Online'){
+   document.getElementById('paymentAction').innerHTML=`<div class="successbox">Online payment selected.</div><button style="width:100%;padding:13px" onclick="completeOnlinePayment()">PAY ₹${Number(b.amount).toLocaleString('en-IN')} NOW</button><p class="muted">Production मध्ये UPI/Card gateway जोडला जाईल.</p>`;
+ }else{
+   b.cashOtp=''+Math.floor(100000+Math.random()*900000);
+   document.getElementById('paymentAction').innerHTML=`<div class="warn"><b>Cash on Service</b><br>Customer ने service पूर्ण झाल्यावर Agent ला cash द्यायचा. Cash collection OTP: <b>${b.cashOtp}</b></div><button class="success" style="width:100%;padding:13px" onclick="confirmCash()">AGENT COLLECTED CASH</button>`;
+ }
+ localStorage.setItem('manvtaBookings',JSON.stringify(arr));
+}
+function completeOnlinePayment(){
+ const arr=JSON.parse(localStorage.getItem('manvtaBookings')||'[]'), b=arr.find(x=>x.id===window.currentPayId);
+ if(!b)return;
+ b.paymentStatus='Paid'; b.status='Payment Confirmed';
+ localStorage.setItem('manvtaBookings',JSON.stringify(arr));
+ addNotification('MANVTA','Online Payment Received',`${b.id} • ₹${Number(b.amount).toLocaleString('en-IN')} • Commission ₹${Number(b.commission).toLocaleString('en-IN')}`);
+ addNotification(b.agent,'Booking Payment Confirmed',`${b.id} payment confirmed. Service can proceed.`);
+ toast('Payment successful'); renderBookings(); setTimeout(()=>show('myBookings'),500);
+}
+function confirmCash(){
+ const arr=JSON.parse(localStorage.getItem('manvtaBookings')||'[]'), b=arr.find(x=>x.id===window.currentPayId);
+ if(!b)return;
+ b.cashCollected=true; b.paymentStatus='Cash Collected'; b.status='Service Confirmed';
+ localStorage.setItem('manvtaBookings',JSON.stringify(arr));
+ addNotification('MANVTA','Cash Collected',`${b.id} • ₹${Number(b.amount).toLocaleString('en-IN')} cash collected by ${b.agent}. MANVTA commission payable ₹${Number(b.commission).toLocaleString('en-IN')}.`);
+ addNotification(b.agent,'Cash Collection Recorded',`${b.id} cash collection recorded. MANVTA commission payable ₹${Number(b.commission).toLocaleString('en-IN')}.`);
+ toast('Cash collection recorded'); renderBookings(); setTimeout(()=>show('myBookings'),500);
+}
+
+function renderBookings(){
+ const arr=JSON.parse(localStorage.getItem('manvtaBookings')||'[]');document.getElementById('bookCount').textContent=arr.length;
+ document.getElementById('bookingList').innerHTML=arr.length?arr.map(b=>`<div class="panel" style="margin-bottom:10px"><div class="row"><b>${b.service}</b><span class="pill">${b.status}</span></div><div class="muted">${b.agent} • Booking #${b.id}</div><p><b>₹${Number(b.amount).toLocaleString('en-IN')}</b> total • MANVTA ₹${Number(b.commission).toLocaleString('en-IN')} • Agent ₹${Number(b.payout).toLocaleString('en-IN')}</p><div><span class="pill">${b.paymentMethod||'Not Selected'}</span> <span class="pill">${b.paymentStatus||'Pending'}</span></div><button onclick="openPayment('${b.id}')">💳 PAY / TRACK</button>
+<button class="secondary" onclick="window.location.href='tel:9923692426'">CALL</button>
+<button class="secondary" onclick="window.location.href='sms:9923692426?body=Booking%20'+encodeURIComponent('${b.id}')">SMS</button></div>`).join(''):'<div class="panel">No bookings yet.</div>';
+}
+function quote(service,loc,budget){show('quoteBox');document.getElementById('quoteSummary').innerHTML=`<b>${service}</b><br><span class="muted">📍 ${loc} • Customer budget ₹${budget.toLocaleString('en-IN')}</span>`;document.getElementById('quoteAmount').value=budget}
+function sendQuote(){toast('Quote sent to customer');setTimeout(()=>show('agentDash'),600)}
+
+function registerAgent(){
+ const name=document.getElementById('aName').value.trim(), mobile=document.getElementById('aMobile').value.trim();
+ const area=document.getElementById('aArea').value.trim(), pan=document.getElementById('aPan').value.trim();
+ if(!name||mobile.length<10||!area||!pan||!document.getElementById('aAgree').checked){alert('Name, valid mobile, service area, PAN आणि terms required.');return}
+ const agents=JSON.parse(localStorage.getItem('manvtaAgents')||'[]');
+ const id='AG'+Date.now().toString().slice(-6);
+ agents.unshift({id,name,mobile,area,pan,status:'Pending KYC Review',created:new Date().toLocaleString('en-IN')});
+ localStorage.setItem('manvtaAgents',JSON.stringify(agents));
+ addNotification('MANVTA','New Agent Registration',`${name} (${id}) submitted KYC for ${area}.`);
+ addNotification(name,'Registration Received',`Your MANVTA Agent ID is ${id}. Status: Pending KYC Review.`);
+ document.getElementById('agentRegMsg').innerHTML=`<div class="successbox">Registration submitted. Agent ID: <b>${id}</b><br>Status: Pending MANVTA KYC Review.</div>`;
+}
+function addNotification(to,title,msg,channel='In-App'){
+ const n=JSON.parse(localStorage.getItem('manvtaNotifications')||'[]');
+ n.unshift({to,title,msg,channel,time:new Date().toLocaleString('en-IN')});
+ localStorage.setItem('manvtaNotifications',JSON.stringify(n));
+}
+function renderNotifications(){
+ const n=JSON.parse(localStorage.getItem('manvtaNotifications')||'[]');
+ document.getElementById('notificationList').innerHTML=n.length?n.slice(0,20).map(x=>`<div class="panel" style="margin-bottom:10px"><div class="row"><b>${x.title}</b><span class="pill">${x.channel}</span></div><div class="muted">${x.to} • ${x.time}</div><p>${x.msg}</p><button onclick="sendChannel('${x.channel}','${String(x.to).replace(/'/g,"\\'")}')">SEND ${x.channel.toUpperCase()}</button></div>`).join(''):'<div class="panel">No notifications yet.</div>';
+}
+function sendChannel(channel,to){
+ if(channel==='WhatsApp') window.open('https://wa.me/91'+to.replace(/\D/g,''),'_blank');
+ else if(channel==='SMS') window.location.href='sms:'+to;
+ else if(channel==='Call') window.location.href='tel:'+to;
+ else toast('In-app notification sent');
+}
+function callManvta(num){window.location.href='tel:'+num}
+function smsManvta(){window.location.href='sms:9923692426?body=MANVTA%20booking%20support%20required'}
+
+function calcCommission(){const p=Number(document.getElementById('commission').value||0),a=Number(document.getElementById('calcAmount').value||0),c=a*p/100;document.getElementById('calcResult').innerHTML=`Customer pays <b>₹${a.toLocaleString('en-IN')}</b><br>MANVTA commission <b>₹${c.toLocaleString('en-IN')}</b><br>Agent payout <b>₹${(a-c).toLocaleString('en-IN')}</b>`}
+calcCommission();renderBookings();
+</script>
+</body>
+</html>
